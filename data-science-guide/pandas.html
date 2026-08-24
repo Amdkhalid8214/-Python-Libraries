@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pandas Complete Guide | DataViz Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <canvas id="bg-canvas" class="bg-canvas"></canvas>
+  <div class="fluid-bg">
+    <div class="fluid-orb blue"></div>
+    <div class="fluid-orb pink"></div>
+    <div class="fluid-orb blue2"></div>
+  </div>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">Data<span>Viz</span> Academy</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="numpy.html">NumPy</a></li>
+        <li><a href="pandas.html" class="active">Pandas</a></li>
+        <li><a href="matplotlib.html">Matplotlib</a></li>
+        <li><a href="seaborn.html">Seaborn</a></li>
+      </ul>
+      <button class="menu-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a> <span>/</span> <span>Pandas</span>
+    </div>
+    <h1>Pandas <span class="text-gradient">Complete Guide</span></h1>
+    <p>Master Series, DataFrames, indexing, grouping, merging, time series, missing data and every core concept of data analysis with Pandas.</p>
+  </header>
+
+  <div class="content-layout">
+    <aside class="toc">
+      <h4>Table of Contents</h4>
+      <ul>
+        <li><a href="#intro">Introduction</a></li>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#series">Series</a></li>
+        <li><a href="#dataframe">DataFrame</a></li>
+        <li><a href="#io">Reading &amp; Writing</a></li>
+        <li><a href="#indexing">Indexing &amp; Selection</a></li>
+        <li><a href="#missing">Missing Data</a></li>
+        <li><a href="#ops">Operations</a></li>
+        <li><a href="#groupby">GroupBy</a></li>
+        <li><a href="#merge">Merge, Join, Concat</a></li>
+        <li><a href="#reshape">Reshaping</a></li>
+        <li><a href="#timeseries">Time Series</a></li>
+        <li><a href="#categorical">Categorical Data</a></li>
+        <li><a href="#styling">Styling &amp; Display</a></li>
+        <li><a href="#performance">Performance Tips</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <section id="intro" class="fade-in">
+        <h2>1. Introduction to Pandas</h2>
+        <p>Pandas is the de-facto library for data manipulation and analysis in Python. It introduces two primary data structures: <strong>Series</strong> (1-dimensional labeled array) and <strong>DataFrame</strong> (2-dimensional labeled data structure). Built on NumPy, it adds labels, flexible indexing, handling of missing data, and powerful group-by / reshape operations.</p>
+        <div class="card">
+          <h4>Core Strengths</h4>
+          <ul class="concept-list">
+            <li>Labeled axes (rows &amp; columns) for intuitive data access</li>
+            <li>Automatic and explicit data alignment</li>
+            <li>Robust handling of missing data</li>
+            <li>Powerful group-by, merge and reshape tools</li>
+            <li>Time-series functionality</li>
+            <li>Flexible I/O for CSV, Excel, SQL, JSON, Parquet, etc.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="installation" class="fade-in">
+        <h2>2. Installation &amp; Import</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">Copy</button></div>
+          <pre><code>pip install pandas</code></pre>
+        </div>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>import pandas as pd
+import numpy as np
+print(pd.__version__)</code></pre>
+        </div>
+      </section>
+
+      <section id="series" class="fade-in">
+        <h2>3. Series</h2>
+        <p>A Series is a one-dimensional labeled array capable of holding any data type.</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># From list
+s = pd.Series([10, 20, 30, 40], index=['a', 'b', 'c', 'd'])
+print(s)
+
+# From dict
+s2 = pd.Series({'x': 1, 'y': 2, 'z': 3})
+
+# From NumPy
+s3 = pd.Series(np.random.randn(5), name='returns')
+
+# Attributes
+s.values, s.index, s.dtype, s.name, s.shape</code></pre>
+        </div>
+        <h3>Indexing a Series</h3>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>s['a']              # label
+s[0]                # position (avoid when labels are integers)
+s.loc['a']          # label-based (preferred)
+s.iloc[0]           # position-based
+s[['a', 'c']]       # multiple labels
+s[s > 20]           # boolean filtering</code></pre>
+        </div>
+      </section>
+
+      <section id="dataframe" class="fade-in">
+        <h2>4. DataFrame</h2>
+        <p>A DataFrame is a 2-D labeled data structure with columns of potentially different types — like a spreadsheet or SQL table.</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># From dict of lists / arrays
+df = pd.DataFrame({
+    'name': ['Alice', 'Bob', 'Charlie'],
+    'age': [25, 30, 35],
+    'city': ['NY', 'LA', 'Chicago']
+})
+
+# From list of dicts
+df2 = pd.DataFrame([
+    {'name': 'Alice', 'age': 25},
+    {'name': 'Bob', 'age': 30}
+])
+
+# From NumPy array
+df3 = pd.DataFrame(np.random.randn(4, 3),
+                   columns=['A', 'B', 'C'],
+                   index=['r1', 'r2', 'r3', 'r4'])
+
+print(df.head())
+print(df.info())
+print(df.describe())
+print(df.dtypes)
+print(df.shape)
+print(df.columns)
+print(df.index)</code></pre>
+        </div>
+      </section>
+
+      <section id="io" class="fade-in">
+        <h2>5. Reading &amp; Writing Data</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># CSV
+df = pd.read_csv('data.csv', index_col=0, parse_dates=['date'])
+df.to_csv('out.csv', index=False)
+
+# Excel
+df = pd.read_excel('data.xlsx', sheet_name='Sheet1')
+df.to_excel('out.xlsx', sheet_name='Results')
+
+# JSON
+df = pd.read_json('data.json')
+df.to_json('out.json', orient='records')
+
+# SQL
+from sqlalchemy import create_engine
+engine = create_engine('sqlite:///db.sqlite')
+df = pd.read_sql('SELECT * FROM table', engine)
+df.to_sql('table_name', engine, if_exists='replace')
+
+# Parquet / Feather (fast columnar)
+df = pd.read_parquet('data.parquet')
+df.to_parquet('out.parquet')
+
+# Clipboard, HTML, etc.
+pd.read_clipboard()
+pd.read_html('https://example.com/table')</code></pre>
+        </div>
+      </section>
+
+      <section id="indexing" class="fade-in">
+        <h2>6. Indexing, Selection &amp; Filtering</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Column selection
+df['age']                 # Series
+df[['name', 'age']]       # DataFrame
+
+# Label-based (.loc)
+df.loc[0]                 # row by label
+df.loc[0, 'name']
+df.loc[0:2, ['name', 'age']]
+df.loc[df['age'] > 28]
+
+# Position-based (.iloc)
+df.iloc[0]
+df.iloc[0:2, 0:2]
+df.iloc[[0, 2], [0, 2]]
+
+# Boolean filtering
+df[(df['age'] > 25) &amp; (df['city'] == 'NY')]
+df.query('age > 25 and city == "NY"')
+
+# Setting values
+df.loc[0, 'age'] = 26
+df['salary'] = [50000, 60000, 70000]   # new column</code></pre>
+        </div>
+        <h3>Index objects</h3>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>df.set_index('name', inplace=True)
+df.reset_index(inplace=True)
+df.reindex(['a', 'b', 'c'])
+df.sort_index(ascending=False)
+df.sort_values('age', ascending=False)</code></pre>
+        </div>
+      </section>
+
+      <section id="missing" class="fade-in">
+        <h2>7. Handling Missing Data</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Detection
+df.isna()                 # or df.isnull()
+df.notna()
+df.isna().sum()
+
+# Dropping
+df.dropna()               # rows with any NaN
+df.dropna(axis=1)         # columns
+df.dropna(how='all')      # only if all values NaN
+df.dropna(subset=['age'])
+df.dropna(thresh=2)       # keep rows with ≥2 non-NaN
+
+# Filling
+df.fillna(0)
+df.fillna({'age': df['age'].mean(), 'city': 'Unknown'})
+df.fillna(method='ffill') # forward fill (deprecated → ffill())
+df.ffill()
+df.bfill()
+df.interpolate()          # linear interpolation
+
+# Replacing
+df.replace(-999, np.nan)
+df.replace({'old': 'new'})</code></pre>
+        </div>
+      </section>
+
+      <section id="ops" class="fade-in">
+        <h2>8. Operations &amp; Functions</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Arithmetic (aligns on index/columns)
+df['age'] + 5
+df['age'] * df['salary']
+
+# Apply / map / applymap
+df['age'].map(lambda x: x + 1)
+df.apply(np.sqrt)                     # column-wise by default
+df.apply(lambda x: x.max() - x.min())
+df.applymap(lambda x: f'{x:.2f}')     # element-wise (deprecated → map)
+
+# String methods
+df['name'].str.upper()
+df['name'].str.contains('A')
+df['name'].str.split(' ').str[0]
+
+# Aggregation
+df['age'].mean()
+df.agg(['mean', 'std', 'min', 'max'])
+df.describe(include='all')</code></pre>
+        </div>
+      </section>
+
+      <section id="groupby" class="fade-in">
+        <h2>9. GroupBy &amp; Aggregation</h2>
+        <p>The split-apply-combine pattern is one of Pandas’ most powerful features.</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>df.groupby('city')['age'].mean()
+df.groupby('city').agg({'age': 'mean', 'salary': ['sum', 'count']})
+
+# Multiple keys
+df.groupby(['city', 'department']).mean()
+
+# Transformation (same shape as original)
+df['age_z'] = df.groupby('city')['age'].transform(
+    lambda x: (x - x.mean()) / x.std()
+)
+
+# Filter groups
+df.groupby('city').filter(lambda g: g['age'].mean() > 30)
+
+# Iteration
+for name, group in df.groupby('city'):
+    print(name, group.shape)
+
+# Named aggregation (modern)
+df.groupby('city').agg(
+    avg_age=('age', 'mean'),
+    total_salary=('salary', 'sum')
+)</code></pre>
+        </div>
+      </section>
+
+      <section id="merge" class="fade-in">
+        <h2>10. Merge, Join &amp; Concatenation</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Concatenation
+pd.concat([df1, df2], axis=0, ignore_index=True)
+pd.concat([df1, df2], axis=1)
+pd.concat([df1, df2], keys=['A', 'B'])
+
+# Merge (SQL-style)
+pd.merge(left, right, on='key')
+pd.merge(left, right, left_on='lkey', right_on='rkey')
+pd.merge(left, right, how='inner')   # inner, left, right, outer, cross
+pd.merge(left, right, on='key', suffixes=('_x', '_y'))
+
+# Join (index-based)
+left.join(right, how='left')
+left.join(right, on='key')</code></pre>
+        </div>
+      </section>
+
+      <section id="reshape" class="fade-in">
+        <h2>11. Reshaping &amp; Pivot Tables</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Pivot
+df.pivot(index='date', columns='city', values='temperature')
+
+# Pivot table (with aggregation)
+pd.pivot_table(df, values='sales', index='region',
+               columns='product', aggfunc='sum', fill_value=0)
+
+# Melt (wide → long)
+pd.melt(df, id_vars=['id'], value_vars=['A', 'B'],
+        var_name='metric', value_name='value')
+
+# Stack / Unstack
+df.stack()
+df.unstack()
+
+# Crosstab
+pd.crosstab(df['city'], df['department'], margins=True)</code></pre>
+        </div>
+      </section>
+
+      <section id="timeseries" class="fade-in">
+        <h2>12. Time Series</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Creating datetime index
+dates = pd.date_range('2024-01-01', periods=100, freq='D')
+ts = pd.Series(np.random.randn(100), index=dates)
+
+# Conversion
+pd.to_datetime(['2024-01-01', '2024/02/15'])
+df['date'] = pd.to_datetime(df['date'])
+
+# Indexing
+ts['2024-01']
+ts['2024-01-01':'2024-01-15']
+ts.asof('2024-01-10')
+
+# Resampling
+ts.resample('W').mean()
+ts.resample('M').sum()
+ts.resample('Q').ohlc()
+
+# Shifting &amp; lagging
+ts.shift(1)
+ts.shift(-1, freq='D')
+
+# Rolling windows
+ts.rolling(window=7).mean()
+ts.rolling(7).std()
+ts.expanding().mean()
+ts.ewm(span=10).mean()
+
+# Time zone handling
+ts.tz_localize('UTC').tz_convert('US/Eastern')</code></pre>
+        </div>
+      </section>
+
+      <section id="categorical" class="fade-in">
+        <h2>13. Categorical Data</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>df['city'] = df['city'].astype('category')
+df['city'] = pd.Categorical(df['city'],
+                            categories=['NY', 'LA', 'Chicago', 'Boston'],
+                            ordered=True)
+
+df['city'].cat.categories
+df['city'].cat.codes
+df['city'].cat.add_categories(['Miami'])
+df['city'].cat.remove_unused_categories()
+df.sort_values('city')   # respects order if ordered=True</code></pre>
+        </div>
+      </section>
+
+      <section id="styling" class="fade-in">
+        <h2>14. Styling &amp; Display Options</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Display options
+pd.set_option('display.max_rows', 100)
+pd.set_option('display.max_columns', 20)
+pd.set_option('display.precision', 3)
+pd.reset_option('all')
+
+# Styler (for Jupyter / HTML export)
+df.style.highlight_max(axis=0)
+df.style.background_gradient(cmap='viridis')
+df.style.format({'salary': '${:,.0f}'})
+df.style.bar(subset=['age'], color='#D95B83')</code></pre>
+        </div>
+      </section>
+
+      <section id="performance" class="fade-in">
+        <h2>15. Performance Tips</h2>
+        <ul class="concept-list">
+          <li>Prefer vectorized operations and built-in methods over <code>apply</code> + Python loops</li>
+          <li>Use categorical dtype for repeated string columns</li>
+          <li>Select only needed columns when reading large files (<code>usecols</code>)</li>
+          <li>Use efficient formats: Parquet / Feather instead of CSV for large data</li>
+          <li>Consider <code>eval()</code> / <code>query()</code> for complex expressions on large frames</li>
+          <li>Chain methods carefully; intermediate copies can be costly</li>
+          <li>For very large data explore Dask, Polars or PySpark</li>
+        </ul>
+      </section>
+
+      <div class="card fade-in" style="margin-top:3rem;text-align:center;">
+        <h3>Next Step</h3>
+        <p>With data in clean DataFrames, the next stage is visualization. Continue to Matplotlib to create any chart from the ground up.</p>
+        <a href="matplotlib.html" class="btn btn-primary" style="margin-top:1rem;">Go to Matplotlib →</a>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>Data<span class="text-gradient">Viz</span> Academy</h3>
+        <p>Complete guides for the Python data science stack.</p>
+      </div>
+      <div>
+        <h4>Libraries</h4>
+        <ul>
+          <li><a href="numpy.html">NumPy</a></li>
+          <li><a href="pandas.html">Pandas</a></li>
+          <li><a href="matplotlib.html">Matplotlib</a></li>
+          <li><a href="seaborn.html">Seaborn</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Official Docs</h4>
+        <ul>
+          <li><a href="https://pandas.pydata.org/docs/" target="_blank" rel="noopener">Pandas Documentation</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 DataViz Academy</p></div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

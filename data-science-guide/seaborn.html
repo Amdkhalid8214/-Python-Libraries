@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seaborn Complete Guide | AMD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <canvas id="bg-canvas" class="bg-canvas"></canvas>
+  <div class="fluid-bg">
+    <div class="fluid-orb blue"></div>
+    <div class="fluid-orb pink"></div>
+    <div class="fluid-orb blue2"></div>
+  </div>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">AMD<span></span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="numpy.html">NumPy</a></li>
+        <li><a href="pandas.html">Pandas</a></li>
+        <li><a href="matplotlib.html">Matplotlib</a></li>
+        <li><a href="seaborn.html" class="active">Seaborn</a></li>
+      </ul>
+      <button class="menu-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a> <span>/</span> <span>Seaborn</span>
+    </div>
+    <h1>Seaborn <span class="text-gradient">Complete Guide</span></h1>
+    <p>Statistical data visualization with elegant defaults. Cover every major plot type, themes, color palettes,
+      multi-plot grids and customization.</p>
+  </header>
+
+  <div class="content-layout">
+    <aside class="toc">
+      <h4>Table of Contents</h4>
+      <ul>
+        <li><a href="#intro">Introduction</a></li>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#themes">Themes &amp; Styles</a></li>
+        <li><a href="#palettes">Color Palettes</a></li>
+        <li><a href="#relational">Relational Plots</a></li>
+        <li><a href="#distributions">Distribution Plots</a></li>
+        <li><a href="#categorical">Categorical Plots</a></li>
+        <li><a href="#regression">Regression Plots</a></li>
+        <li><a href="#matrix">Matrix Plots</a></li>
+        <li><a href="#grids">Multi-Plot Grids</a></li>
+        <li><a href="#context">Context &amp; Scaling</a></li>
+        <li><a href="#custom">Customization</a></li>
+        <li><a href="#datasets">Built-in Datasets</a></li>
+        <li><a href="#best">Best Practices</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <section id="intro" class="fade-in">
+        <h2>1. Introduction to Seaborn</h2>
+        <p>Seaborn is a high-level statistical visualization library built on top of Matplotlib. It provides a beautiful
+          default aesthetic, integrates tightly with Pandas DataFrames, and offers specialized plot types for exploring
+          relationships, distributions and categorical data.</p>
+        <div class="card">
+          <h4>Why Seaborn?</h4>
+          <ul class="concept-list">
+            <li>Attractive default themes and color palettes</li>
+            <li>Functions that automatically compute and show statistical estimates</li>
+            <li>Close integration with Pandas (works directly with DataFrames and Series)</li>
+            <li>Convenient multi-plot grids (FacetGrid, PairGrid, JointGrid)</li>
+            <li>Still fully compatible with Matplotlib for fine-grained control</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="installation" class="fade-in">
+        <h2>2. Installation &amp; Import</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">Copy</button></div>
+          <pre><code>pip install seaborn</code></pre>
+        </div>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+print(sns.__version__)
+
+# Recommended: set a theme early
+sns.set_theme()</code></pre>
+        </div>
+      </section>
+
+      <section id="themes" class="fade-in">
+        <h2>3. Themes &amp; Styles</h2>
+        <p>Seaborn controls the look of Matplotlib figures through themes.</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Main theme setter
+sns.set_theme(style='darkgrid',      # darkgrid | whitegrid | dark | white | ticks
+              palette='deep',        # or a custom palette
+              font='sans-serif',
+              font_scale=1.1,
+              rc={'figure.figsize': (8, 5)})
+
+# Individual controls
+sns.set_style('whitegrid')
+sns.set_context('notebook')          # paper | notebook | talk | poster
+sns.despine(left=True, bottom=False) # remove spines
+sns.despine(offset=10, trim=True)</code></pre>
+        </div>
+      </section>
+
+      <section id="palettes" class="fade-in">
+        <h2>4. Color Palettes</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Qualitative (categorical)
+sns.color_palette('deep')
+sns.color_palette('muted')
+sns.color_palette('pastel')
+sns.color_palette('bright')
+sns.color_palette('dark')
+sns.color_palette('colorblind')
+
+# Sequential
+sns.color_palette('Blues')
+sns.color_palette('viridis', as_cmap=True)
+sns.color_palette('rocket')
+
+# Diverging
+sns.color_palette('coolwarm', as_cmap=True)
+sns.color_palette('vlag')
+
+# Custom
+sns.color_palette(['#B8C5F2', '#D95B83', '#4D4E3A', '#848B9E'])
+
+# Set globally
+sns.set_palette('husl')
+sns.set_palette(sns.color_palette('Spectral', 8))
+
+# Display a palette
+sns.palplot(sns.color_palette('deep'))</code></pre>
+        </div>
+      </section>
+
+      <section id="relational" class="fade-in">
+        <h2>5. Relational Plots</h2>
+        <p>Show relationships between two (or more) quantitative variables.</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Scatter plot
+sns.scatterplot(data=df, x='total_bill', y='tip',
+                hue='sex', style='time', size='size',
+                sizes=(20, 200), alpha=0.8)
+
+# Line plot (with aggregation)
+sns.lineplot(data=df, x='year', y='passengers',
+             hue='month', style='month', markers=True, dashes=False)
+
+# High-level relplot (returns FacetGrid)
+sns.relplot(data=df, x='total_bill', y='tip',
+            col='time', row='sex', hue='smoker',
+            kind='scatter', height=4, aspect=1.2)
+
+sns.relplot(data=df, x='year', y='passengers',
+            kind='line', col='month', col_wrap=4)</code></pre>
+        </div>
+      </section>
+
+      <section id="distributions" class="fade-in">
+        <h2>6. Distribution Plots</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Histogram + KDE
+sns.histplot(data=df, x='total_bill', kde=True, bins=30,
+             color='#B8C5F2', edgecolor='white')
+
+# Kernel Density Estimate
+sns.kdeplot(data=df, x='total_bill', fill=True, color='#D95B83')
+sns.kdeplot(data=df, x='total_bill', y='tip', fill=True, levels=10)
+
+# Empirical Cumulative Distribution
+sns.ecdfplot(data=df, x='total_bill', hue='sex')
+
+# Rug plot
+sns.rugplot(data=df, x='total_bill')
+
+# High-level displot
+sns.displot(data=df, x='total_bill', kind='hist', col='sex', kde=True)
+sns.displot(data=df, x='total_bill', y='tip', kind='kde', rug=True)
+
+# Joint distribution
+sns.jointplot(data=df, x='total_bill', y='tip', kind='scatter')  # or 'kde', 'hist', 'hex', 'reg', 'resid'
+sns.jointplot(data=df, x='total_bill', y='tip', kind='kde', fill=True)
+
+# Pairwise relationships
+sns.pairplot(df, hue='sex', diag_kind='kde', corner=True)</code></pre>
+        </div>
+      </section>
+
+      <section id="categorical" class="fade-in">
+        <h2>7. Categorical Plots</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Strip plot (jittered points)
+sns.stripplot(data=df, x='day', y='total_bill', hue='sex', dodge=True)
+
+# Swarm plot (non-overlapping)
+sns.swarmplot(data=df, x='day', y='total_bill', hue='sex')
+
+# Box plot
+sns.boxplot(data=df, x='day', y='total_bill', hue='sex',
+            palette='Set2', showfliers=True)
+
+# Violin plot
+sns.violinplot(data=df, x='day', y='total_bill', hue='sex',
+               split=True, inner='quartile')
+
+# Boxen plot (enhanced box for large data)
+sns.boxenplot(data=df, x='day', y='total_bill')
+
+# Point plot (mean + CI)
+sns.pointplot(data=df, x='day', y='total_bill', hue='sex',
+              markers=['o', 's'], linestyles=['-', '--'])
+
+# Bar plot (mean + CI)
+sns.barplot(data=df, x='day', y='total_bill', hue='sex',
+            errorbar='ci', capsize=0.1)
+
+# Count plot
+sns.countplot(data=df, x='day', hue='sex')
+
+# High-level catplot
+sns.catplot(data=df, x='day', y='total_bill',
+            hue='sex', col='time', kind='box', height=4)</code></pre>
+        </div>
+      </section>
+
+      <section id="regression" class="fade-in">
+        <h2>8. Regression Plots</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Linear regression with CI
+sns.regplot(data=df, x='total_bill', y='tip',
+            scatter_kws={'alpha': 0.5}, line_kws={'color': '#D95B83'})
+
+# Higher-order polynomial
+sns.regplot(data=df, x='total_bill', y='tip', order=2)
+
+# Logistic regression
+sns.regplot(data=df, x='total_bill', y='smoker_binary', logistic=True)
+
+# Residual plot
+sns.residplot(data=df, x='total_bill', y='tip', lowess=True)
+
+# High-level lmplot (FacetGrid)
+sns.lmplot(data=df, x='total_bill', y='tip',
+           hue='smoker', col='time', height=4,
+           markers=['o', 'x'], palette='Set1')</code></pre>
+        </div>
+      </section>
+
+      <section id="matrix" class="fade-in">
+        <h2>9. Matrix Plots</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Heatmap
+corr = df.corr(numeric_only=True)
+sns.heatmap(corr, annot=True, fmt='.2f', cmap='coolwarm',
+            center=0, square=True, linewidths=0.5,
+            cbar_kws={'shrink': 0.8})
+
+# Clustered heatmap
+sns.clustermap(corr, annot=True, cmap='vlag', center=0,
+               method='ward', figsize=(8, 8))
+
+# Simple matrix of values
+sns.heatmap(data, cmap='YlGnBu', xticklabels=True, yticklabels=True)</code></pre>
+        </div>
+      </section>
+
+      <section id="grids" class="fade-in">
+        <h2>10. Multi-Plot Grids</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># FacetGrid — core multi-plot object
+g = sns.FacetGrid(df, col='time', row='sex', hue='smoker',
+                  height=3.5, aspect=1.1, margin_titles=True)
+g.map_dataframe(sns.scatterplot, x='total_bill', y='tip')
+g.add_legend()
+g.set_axis_labels('Total Bill', 'Tip')
+g.set_titles(col_template='{col_name}', row_template='{row_name}')
+
+# PairGrid
+g = sns.PairGrid(df, hue='sex', vars=['total_bill', 'tip', 'size'])
+g.map_diag(sns.histplot, kde=True)
+g.map_offdiag(sns.scatterplot, alpha=0.6)
+g.add_legend()
+
+# JointGrid
+g = sns.JointGrid(data=df, x='total_bill', y='tip', space=0)
+g.plot_joint(sns.kdeplot, fill=True, levels=10)
+g.plot_marginals(sns.histplot, kde=True)</code></pre>
+        </div>
+      </section>
+
+      <section id="context" class="fade-in">
+        <h2>11. Context &amp; Scaling</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Context changes size of labels, lines, etc.
+sns.set_context('paper')     # smallest
+sns.set_context('notebook')  # default
+sns.set_context('talk')      # larger
+sns.set_context('poster')    # largest
+
+# Fine-tune
+sns.set_context('notebook', font_scale=1.2, rc={'lines.linewidth': 2.5})
+
+# Temporary context
+with sns.plotting_context('talk', font_scale=1.1):
+    sns.scatterplot(...)</code></pre>
+        </div>
+      </section>
+
+      <section id="custom" class="fade-in">
+        <h2>12. Customization &amp; Matplotlib Interop</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Most Seaborn functions return a Matplotlib Axes
+ax = sns.scatterplot(data=df, x='total_bill', y='tip')
+ax.set_title('Custom Title', fontsize=14, color='white')
+ax.set_xlabel('Total Bill ($)')
+ax.set_facecolor('#1a1b24')
+
+# For FacetGrid / relplot / catplot etc.
+g = sns.relplot(...)
+g.fig.suptitle('Overall Title', y=1.02)
+g.set_titles('Day: {col_name}')
+g.tight_layout()
+
+# Access underlying figure
+fig = ax.get_figure()
+fig.savefig('seaborn_plot.png', dpi=300, bbox_inches='tight')
+
+# Override rcParams for a single plot
+with sns.axes_style('darkgrid'), sns.color_palette('muted'):
+    sns.boxplot(...)</code></pre>
+        </div>
+      </section>
+
+      <section id="datasets" class="fade-in">
+        <h2>13. Built-in Datasets</h2>
+        <p>Seaborn ships with several classic datasets for quick experimentation.</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>sns.get_dataset_names()
+
+tips = sns.load_dataset('tips')
+iris = sns.load_dataset('iris')
+penguins = sns.load_dataset('penguins')
+flights = sns.load_dataset('flights')
+titanic = sns.load_dataset('titanic')
+planets = sns.load_dataset('planets')
+diamonds = sns.load_dataset('diamonds')
+car_crashes = sns.load_dataset('car_crashes')
+fmri = sns.load_dataset('fmri')
+exercise = sns.load_dataset('exercise')</code></pre>
+        </div>
+      </section>
+
+      <section id="best" class="fade-in">
+        <h2>14. Best Practices</h2>
+        <ul class="concept-list">
+          <li>Start with <code>sns.set_theme()</code> to get consistent, attractive defaults</li>
+          <li>Prefer the high-level figure-level functions (<code>relplot</code>, <code>displot</code>,
+            <code>catplot</code>, <code>lmplot</code>) when you need faceting</li>
+          <li>Use axes-level functions (<code>scatterplot</code>, <code>histplot</code>, etc.) when you need to place
+            plots on existing Axes or mix with pure Matplotlib</li>
+          <li>Always consider colorblind-friendly palettes (<code>colorblind</code>, <code>viridis</code>,
+            <code>rocket</code>)</li>
+          <li>For large datasets prefer <code>histplot</code> / <code>kdeplot</code> over <code>swarmplot</code> (which
+            can be slow)</li>
+          <li>Combine Seaborn’s statistical power with Matplotlib’s fine control when necessary</li>
+          <li>Document the statistical aggregation (mean, median, CI) you are showing</li>
+        </ul>
+      </section>
+
+      <div class="card fade-in" style="margin-top:3rem;text-align:center;">
+        <h3>You Have Completed the Stack</h3>
+        <p>You now have a solid foundation in NumPy, Pandas, Matplotlib and Seaborn. Return to the home page or revisit
+          any library for a deeper dive.</p>
+        <a href="index.html" class="btn btn-primary" style="margin-top:1rem;">← Back to Home</a>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>Data<span class="text-gradient">Viz</span> Academy</h3>
+        <p>Complete guides for the Python data science stack.</p>
+      </div>
+      <div>
+        <h4>Libraries</h4>
+        <ul>
+          <li><a href="numpy.html">NumPy</a></li>
+          <li><a href="pandas.html">Pandas</a></li>
+          <li><a href="matplotlib.html">Matplotlib</a></li>
+          <li><a href="seaborn.html">Seaborn</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Official Docs</h4>
+        <ul>
+          <li><a href="https://seaborn.pydata.org/" target="_blank" rel="noopener">Seaborn Documentation</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 AMD</p>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+
+</html>

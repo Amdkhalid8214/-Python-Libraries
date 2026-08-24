@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matplotlib Complete Guide | AMD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <canvas id="bg-canvas" class="bg-canvas"></canvas>
+  <div class="fluid-bg">
+    <div class="fluid-orb blue"></div>
+    <div class="fluid-orb pink"></div>
+    <div class="fluid-orb blue2"></div>
+  </div>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">AMD<span></span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="numpy.html">NumPy</a></li>
+        <li><a href="pandas.html">Pandas</a></li>
+        <li><a href="matplotlib.html" class="active">Matplotlib</a></li>
+        <li><a href="seaborn.html">Seaborn</a></li>
+      </ul>
+      <button class="menu-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a> <span>/</span> <span>Matplotlib</span>
+    </div>
+    <h1>Matplotlib <span class="text-gradient">Complete Guide</span></h1>
+    <p>Master figures, axes, every plot type, customization, subplots, 3D visualization, animations and the
+      object-oriented API.</p>
+  </header>
+
+  <div class="content-layout">
+    <aside class="toc">
+      <h4>Table of Contents</h4>
+      <ul>
+        <li><a href="#intro">Introduction</a></li>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#interfaces">Two Interfaces</a></li>
+        <li><a href="#figure-axes">Figure &amp; Axes</a></li>
+        <li><a href="#line">Line Plots</a></li>
+        <li><a href="#scatter">Scatter Plots</a></li>
+        <li><a href="#bar">Bar &amp; Histogram</a></li>
+        <li><a href="#other">Other Plot Types</a></li>
+        <li><a href="#customize">Customization</a></li>
+        <li><a href="#subplots">Subplots</a></li>
+        <li><a href="#3d">3D Plots</a></li>
+        <li><a href="#animation">Animation</a></li>
+        <li><a href="#styles">Styles &amp; Themes</a></li>
+        <li><a href="#saving">Saving Figures</a></li>
+        <li><a href="#best">Best Practices</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <section id="intro" class="fade-in">
+        <h2>1. Introduction to Matplotlib</h2>
+        <p>Matplotlib is the foundational plotting library in Python. It provides a MATLAB-like interface (pyplot) as
+          well as a full object-oriented API. Virtually every other visualization library (Seaborn, Pandas plotting,
+          Plotly wrappers, etc.) builds on or interoperates with Matplotlib.</p>
+        <div class="card">
+          <h4>Key Concepts</h4>
+          <ul class="concept-list">
+            <li><strong>Figure</strong> — the overall window or page</li>
+            <li><strong>Axes</strong> — an individual plot (a Figure can contain multiple Axes)</li>
+            <li><strong>Artist</strong> — everything visible (lines, text, patches…)</li>
+            <li>Two coding styles: pyplot state-machine and explicit object-oriented</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="installation" class="fade-in">
+        <h2>2. Installation &amp; Backend</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">Copy</button></div>
+          <pre><code>pip install matplotlib</code></pre>
+        </div>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>import matplotlib.pyplot as plt
+import matplotlib as mpl
+import numpy as np
+
+# For Jupyter notebooks
+%matplotlib inline
+# or for interactive
+%matplotlib widget</code></pre>
+        </div>
+      </section>
+
+      <section id="interfaces" class="fade-in">
+        <h2>3. The Two Interfaces</h2>
+        <h3>Pyplot (state-based) — convenient for quick plots</h3>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>plt.plot([1, 2, 3, 4], [1, 4, 9, 16])
+plt.title('Simple Plot')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.show()</code></pre>
+        </div>
+        <h3>Object-oriented — preferred for complex figures</h3>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>fig, ax = plt.subplots()
+ax.plot([1, 2, 3, 4], [1, 4, 9, 16])
+ax.set_title('Simple Plot')
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+plt.show()</code></pre>
+        </div>
+      </section>
+
+      <section id="figure-axes" class="fade-in">
+        <h2>4. Figure, Axes &amp; Anatomy</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>fig = plt.figure(figsize=(8, 5), dpi=100, facecolor='#12131A')
+ax = fig.add_subplot(111)          # or fig.add_axes([left, bottom, width, height])
+
+# Multiple axes
+fig, axes = plt.subplots(2, 2, figsize=(10, 8))
+axes[0, 0].plot(...)
+axes[0, 1].scatter(...)
+
+# Tight layout
+fig.tight_layout()
+# or
+fig.subplots_adjust(hspace=0.3, wspace=0.3)</code></pre>
+        </div>
+      </section>
+
+      <section id="line" class="fade-in">
+        <h2>5. Line Plots</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>x = np.linspace(0, 10, 100)
+y1 = np.sin(x)
+y2 = np.cos(x)
+
+fig, ax = plt.subplots()
+ax.plot(x, y1, label='sin', color='#B8C5F2', linewidth=2, linestyle='-')
+ax.plot(x, y2, label='cos', color='#D95B83', linewidth=2, linestyle='--')
+ax.legend()
+ax.set_title('Trigonometric Functions')
+plt.show()
+
+# Multiple styles
+ax.plot(x, y1, 'o-', markersize=4)          # markers + line
+ax.plot(x, y1, color='C0', alpha=0.7)</code></pre>
+        </div>
+      </section>
+
+      <section id="scatter" class="fade-in">
+        <h2>6. Scatter Plots</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>x = np.random.randn(100)
+y = np.random.randn(100)
+colors = np.random.rand(100)
+sizes = 1000 * np.random.rand(100)
+
+fig, ax = plt.subplots()
+sc = ax.scatter(x, y, c=colors, s=sizes, alpha=0.6,
+                cmap='viridis', edgecolors='white', linewidth=0.5)
+fig.colorbar(sc, ax=ax, label='Color scale')
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+plt.show()</code></pre>
+        </div>
+      </section>
+
+      <section id="bar" class="fade-in">
+        <h2>7. Bar Charts &amp; Histograms</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Vertical bar
+categories = ['A', 'B', 'C', 'D']
+values = [23, 45, 12, 36]
+ax.bar(categories, values, color='#B8C5F2', edgecolor='white')
+
+# Horizontal
+ax.barh(categories, values)
+
+# Grouped bars
+x = np.arange(len(categories))
+width = 0.35
+ax.bar(x - width/2, values1, width, label='Group 1')
+ax.bar(x + width/2, values2, width, label='Group 2')
+ax.set_xticks(x)
+ax.set_xticklabels(categories)
+
+# Histogram
+data = np.random.randn(1000)
+ax.hist(data, bins=30, density=True, alpha=0.7,
+        color='#D95B83', edgecolor='white')
+ax.hist(data, bins=30, histtype='step', linewidth=2)  # step style</code></pre>
+        </div>
+      </section>
+
+      <section id="other" class="fade-in">
+        <h2>8. Other Essential Plot Types</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Pie chart
+ax.pie(sizes, labels=labels, autopct='%1.1f%%',
+       colors=['#B8C5F2', '#D95B83', '#4D4E3A', '#848B9E'],
+       explode=(0.05, 0, 0, 0), shadow=True)
+
+# Box plot
+ax.boxplot([data1, data2, data3], labels=['A', 'B', 'C'],
+           patch_artist=True)
+
+# Violin plot
+ax.violinplot([data1, data2], showmeans=True)
+
+# Error bars
+ax.errorbar(x, y, yerr=yerr, fmt='o', capsize=4)
+
+# Fill between
+ax.fill_between(x, y1, y2, alpha=0.3, color='#B8C5F2')
+
+# Contour / Image
+X, Y = np.meshgrid(np.linspace(-3, 3, 100), np.linspace(-3, 3, 100))
+Z = np.sin(X) * np.cos(Y)
+ax.contour(X, Y, Z, levels=15, cmap='coolwarm')
+ax.contourf(X, Y, Z, levels=15, cmap='coolwarm')
+ax.imshow(Z, cmap='viridis', origin='lower')
+
+# Quiver (vector field)
+ax.quiver(X, Y, U, V)
+
+# Stem
+ax.stem(x, y)</code></pre>
+        </div>
+      </section>
+
+      <section id="customize" class="fade-in">
+        <h2>9. Customization Deep Dive</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>fig, ax = plt.subplots(figsize=(9, 5))
+
+# Titles &amp; labels
+ax.set_title('Main Title', fontsize=16, fontweight='bold', color='white', pad=15)
+ax.set_xlabel('X Axis', fontsize=12)
+ax.set_ylabel('Y Axis', fontsize=12)
+
+# Limits &amp; ticks
+ax.set_xlim(0, 10)
+ax.set_ylim(-1.5, 1.5)
+ax.set_xticks([0, 2, 4, 6, 8, 10])
+ax.set_xticklabels(['0', '2', '4', '6', '8', '10'], rotation=45)
+ax.tick_params(axis='both', labelsize=10, colors='#848B9E')
+
+# Spines
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['left'].set_color('#848B9E')
+ax.spines['bottom'].set_color('#848B9E')
+
+# Grid
+ax.grid(True, linestyle='--', alpha=0.3, color='#848B9E')
+ax.set_axisbelow(True)
+
+# Legend
+ax.legend(loc='upper right', frameon=False, fontsize=10)
+
+# Text &amp; annotations
+ax.text(5, 1, 'Important point', fontsize=11, color='#D95B83')
+ax.annotate('Peak', xy=(1.57, 1), xytext=(3, 1.2),
+            arrowprops=dict(arrowstyle='->', color='#B8C5F2'))
+
+# Background
+ax.set_facecolor('#1a1b24')
+fig.patch.set_facecolor('#12131A')</code></pre>
+        </div>
+      </section>
+
+      <section id="subplots" class="fade-in">
+        <h2>10. Subplots &amp; Layouts</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Basic grid
+fig, axes = plt.subplots(2, 3, figsize=(12, 7), sharex=True, sharey=False)
+
+# GridSpec for complex layouts
+from matplotlib.gridspec import GridSpec
+fig = plt.figure(figsize=(10, 8))
+gs = GridSpec(3, 3, figure=fig)
+ax1 = fig.add_subplot(gs[0, :])      # full top row
+ax2 = fig.add_subplot(gs[1, 0:2])
+ax3 = fig.add_subplot(gs[1:, 2])
+ax4 = fig.add_subplot(gs[2, 0])
+ax5 = fig.add_subplot(gs[2, 1])
+
+# Inset axes
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+axins = inset_axes(ax, width='30%', height='30%', loc='upper right')</code></pre>
+        </div>
+      </section>
+
+      <section id="3d" class="fade-in">
+        <h2>11. 3D Plots</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>from mpl_toolkits.mplot3d import Axes3D
+
+fig = plt.figure(figsize=(9, 7))
+ax = fig.add_subplot(111, projection='3d')
+
+# Surface
+X, Y = np.meshgrid(np.linspace(-5, 5, 50), np.linspace(-5, 5, 50))
+Z = np.sin(np.sqrt(X**2 + Y**2))
+surf = ax.plot_surface(X, Y, Z, cmap='viridis', edgecolor='none', alpha=0.9)
+fig.colorbar(surf, shrink=0.5)
+
+# Scatter 3D
+ax.scatter(xs, ys, zs, c=zs, cmap='plasma', s=20)
+
+# Wireframe
+ax.plot_wireframe(X, Y, Z, rstride=5, cstride=5, color='#B8C5F2', alpha=0.5)
+
+# Line 3D
+ax.plot(x, y, z, color='#D95B83')
+
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z')
+ax.view_init(elev=25, azim=45)</code></pre>
+        </div>
+      </section>
+
+      <section id="animation" class="fade-in">
+        <h2>12. Animation</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>from matplotlib.animation import FuncAnimation
+
+fig, ax = plt.subplots()
+x = np.linspace(0, 2*np.pi, 200)
+line, = ax.plot(x, np.sin(x))
+
+def update(frame):
+    line.set_ydata(np.sin(x + frame / 10))
+    return line,
+
+ani = FuncAnimation(fig, update, frames=100, interval=30, blit=True)
+# ani.save('animation.gif', writer='pillow')
+plt.show()</code></pre>
+        </div>
+      </section>
+
+      <section id="styles" class="fade-in">
+        <h2>13. Styles, Contexts &amp; rcParams</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Built-in styles
+print(plt.style.available)
+plt.style.use('seaborn-v0_8-darkgrid')
+plt.style.use('ggplot')
+plt.style.use('fivethirtyeight')
+
+# Temporary style
+with plt.style.context('dark_background'):
+    plt.plot(x, y)
+
+# Global rcParams
+mpl.rcParams['font.size'] = 12
+mpl.rcParams['axes.facecolor'] = '#1a1b24'
+mpl.rcParams['figure.facecolor'] = '#12131A'
+mpl.rcParams['text.color'] = 'white'
+mpl.rcParams['axes.labelcolor'] = '#848B9E'
+mpl.rcParams['xtick.color'] = '#848B9E'
+mpl.rcParams['ytick.color'] = '#848B9E'
+
+# Reset
+mpl.rcdefaults()</code></pre>
+        </div>
+      </section>
+
+      <section id="saving" class="fade-in">
+        <h2>14. Saving Figures</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>fig.savefig('plot.png', dpi=300, bbox_inches='tight',
+            facecolor=fig.get_facecolor(), edgecolor='none')
+
+fig.savefig('plot.pdf')          # vector
+fig.savefig('plot.svg')
+fig.savefig('plot.jpg', quality=95)
+
+# Transparent background
+fig.savefig('plot.png', transparent=True)</code></pre>
+        </div>
+      </section>
+
+      <section id="best" class="fade-in">
+        <h2>15. Best Practices</h2>
+        <ul class="concept-list">
+          <li>Prefer the object-oriented API for anything beyond a quick exploration plot</li>
+          <li>Always label axes and provide a clear title or caption</li>
+          <li>Use colorblind-friendly colormaps (viridis, plasma, cividis)</li>
+          <li>Avoid chartjunk — maximize data-ink ratio</li>
+          <li>Set figsize and dpi intentionally for the target medium (screen vs print)</li>
+          <li>Close figures when creating many of them in a loop (<code>plt.close(fig)</code>)</li>
+          <li>For statistical plots consider Seaborn first — it handles many aesthetics automatically</li>
+        </ul>
+      </section>
+
+      <div class="card fade-in" style="margin-top:3rem;text-align:center;">
+        <h3>Next Step</h3>
+        <p>Seaborn builds on Matplotlib and provides a high-level interface for statistical graphics with beautiful
+          defaults.</p>
+        <a href="seaborn.html" class="btn btn-primary" style="margin-top:1rem;">Go to Seaborn →</a>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>Data<span class="text-gradient">Viz</span> Academy</h3>
+        <p>Complete guides for the Python data science stack.</p>
+      </div>
+      <div>
+        <h4>Libraries</h4>
+        <ul>
+          <li><a href="numpy.html">NumPy</a></li>
+          <li><a href="pandas.html">Pandas</a></li>
+          <li><a href="matplotlib.html">Matplotlib</a></li>
+          <li><a href="seaborn.html">Seaborn</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Official Docs</h4>
+        <ul>
+          <li><a href="https://matplotlib.org/stable/contents.html" target="_blank" rel="noopener">Matplotlib
+              Documentation</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 AMD</p>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+
+</html>

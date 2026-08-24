@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NumPy Complete Guide | AMD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <canvas id="bg-canvas" class="bg-canvas"></canvas>
+  <div class="fluid-bg">
+    <div class="fluid-orb blue"></div>
+    <div class="fluid-orb pink"></div>
+    <div class="fluid-orb blue2"></div>
+  </div>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">AMD<span></span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="numpy.html" class="active">NumPy</a></li>
+        <li><a href="pandas.html">Pandas</a></li>
+        <li><a href="matplotlib.html">Matplotlib</a></li>
+        <li><a href="seaborn.html">Seaborn</a></li>
+      </ul>
+      <button class="menu-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a> <span>/</span> <span>NumPy</span>
+    </div>
+    <h1>NumPy <span class="text-gradient">Complete Guide</span></h1>
+    <p>Every essential concept of the Numerical Python library — from ndarray fundamentals to advanced linear algebra,
+      broadcasting and random generation.</p>
+  </header>
+
+  <div class="content-layout">
+    <aside class="toc">
+      <h4>Table of Contents</h4>
+      <ul>
+        <li><a href="#intro">Introduction</a></li>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#ndarray">The ndarray</a></li>
+        <li><a href="#creation">Array Creation</a></li>
+        <li><a href="#attributes">Attributes &amp; Dtypes</a></li>
+        <li><a href="#indexing">Indexing &amp; Slicing</a></li>
+        <li><a href="#reshaping">Reshaping &amp; Views</a></li>
+        <li><a href="#operations">Arithmetic &amp; Ufuncs</a></li>
+        <li><a href="#broadcasting">Broadcasting</a></li>
+        <li><a href="#aggregation">Aggregation</a></li>
+        <li><a href="#boolean">Boolean Logic</a></li>
+        <li><a href="#linalg">Linear Algebra</a></li>
+        <li><a href="#random">Random Module</a></li>
+        <li><a href="#io">File I/O</a></li>
+        <li><a href="#advanced">Advanced Topics</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <!-- Intro -->
+      <section id="intro" class="fade-in">
+        <h2>1. Introduction to NumPy</h2>
+        <p>NumPy (Numerical Python) is the foundational library for scientific computing in Python. It provides a
+          high-performance multidimensional array object and tools for working with these arrays. Almost every data
+          science and machine learning library (Pandas, Scikit-learn, TensorFlow, PyTorch, Matplotlib, Seaborn) builds
+          on top of NumPy.</p>
+        <div class="card">
+          <h4>Why NumPy?</h4>
+          <ul class="concept-list">
+            <li>Fast: written in C under the hood — vectorized operations avoid slow Python loops</li>
+            <li>Memory efficient: contiguous memory layout</li>
+            <li>Rich ecosystem of mathematical functions</li>
+            <li>Interoperability with other scientific libraries</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Installation -->
+      <section id="installation" class="fade-in">
+        <h2>2. Installation &amp; Import</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn">Copy</button></div>
+          <pre><code>pip install numpy</code></pre>
+        </div>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>import numpy as np
+print(np.__version__)</code></pre>
+        </div>
+        <div class="output-block"># Example output
+          1.26.4</div>
+      </section>
+
+      <!-- ndarray -->
+      <section id="ndarray" class="fade-in">
+        <h2>3. The ndarray Object</h2>
+        <p>The core data structure is the <strong>ndarray</strong> (N-dimensional array). It is a homogeneous,
+          fixed-size collection of items of the same type.</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>arr = np.array([1, 2, 3, 4, 5])
+print(type(arr))
+print(arr)</code></pre>
+        </div>
+        <div class="output-block">&lt;class 'numpy.ndarray'&gt;
+          [1 2 3 4 5]</div>
+        <p>Key properties: homogeneous dtype, fixed shape after creation (though reshape creates views), and support for
+          vectorized operations.</p>
+      </section>
+
+      <!-- Creation -->
+      <section id="creation" class="fade-in">
+        <h2>4. Array Creation Methods</h2>
+        <h3>From Python sequences</h3>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># 1-D
+a = np.array([1, 2, 3])
+
+# 2-D
+b = np.array([[1, 2, 3], [4, 5, 6]])
+
+# 3-D
+c = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])
+
+print(b.shape)  # (2, 3)</code></pre>
+        </div>
+
+        <h3>Special arrays</h3>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>np.zeros((3, 4))          # 3x4 zeros
+np.ones((2, 3))           # 2x3 ones
+np.full((2, 2), 7)        # filled with 7
+np.eye(4)                 # 4x4 identity
+np.diag([1, 2, 3])        # diagonal matrix
+np.empty((2, 3))          # uninitialized (fast)</code></pre>
+        </div>
+
+        <h3>Ranges &amp; grids</h3>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>np.arange(0, 10, 2)           # [0 2 4 6 8]
+np.linspace(0, 1, 5)          # 5 evenly spaced points
+np.logspace(0, 2, 4)          # logarithmic scale
+np.meshgrid([1,2,3], [4,5])   # coordinate grids</code></pre>
+        </div>
+
+        <h3>From existing data</h3>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>np.asarray([1, 2, 3])         # convert without copy if possible
+np.fromfunction(lambda i, j: i + j, (3, 3))
+np.fromiter(range(5), dtype=float)</code></pre>
+        </div>
+      </section>
+
+      <!-- Attributes -->
+      <section id="attributes" class="fade-in">
+        <h2>5. Attributes, Shape &amp; Data Types</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>arr = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float64)
+
+print(arr.ndim)      # 2
+print(arr.shape)     # (2, 3)
+print(arr.size)      # 6
+print(arr.dtype)     # float64
+print(arr.itemsize)  # 8 bytes
+print(arr.nbytes)    # 48
+print(arr.strides)   # memory layout info</code></pre>
+        </div>
+
+        <h3>Common dtypes</h3>
+        <ul class="concept-list">
+          <li><code>np.int8 / int16 / int32 / int64</code></li>
+          <li><code>np.uint8 / uint16 / uint32 / uint64</code></li>
+          <li><code>np.float16 / float32 / float64</code></li>
+          <li><code>np.complex64 / complex128</code></li>
+          <li><code>np.bool_</code>, <code>np.object_</code>, <code>np.string_</code>, <code>np.unicode_</code></li>
+        </ul>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>arr.astype(np.int32)          # convert dtype
+np.array([1, 2], dtype='float32')</code></pre>
+        </div>
+      </section>
+
+      <!-- Indexing -->
+      <section id="indexing" class="fade-in">
+        <h2>6. Indexing, Slicing &amp; Fancy Indexing</h2>
+        <h3>Basic indexing &amp; slicing</h3>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>a = np.arange(12).reshape(3, 4)
+# [[ 0  1  2  3]
+#  [ 4  5  6  7]
+#  [ 8  9 10 11]]
+
+a[1, 2]          # 6
+a[0]             # first row
+a[:, 1]          # second column
+a[0:2, 1:3]      # sub-array
+a[::2, ::2]      # every other element</code></pre>
+        </div>
+
+        <h3>Boolean indexing</h3>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>a = np.array([1, 5, 3, 8, 2])
+mask = a > 3
+print(a[mask])           # [5 8]
+a[a % 2 == 0] = -1       # modify in place</code></pre>
+        </div>
+
+        <h3>Fancy (integer) indexing</h3>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>a = np.arange(10)
+a[[0, 3, 5]]             # [0 3 5]
+
+# Multi-dimensional
+b = np.arange(12).reshape(3, 4)
+b[[0, 2], [1, 3]]        # [1 11]</code></pre>
+        </div>
+      </section>
+
+      <!-- Reshaping -->
+      <section id="reshaping" class="fade-in">
+        <h2>7. Reshaping, Views &amp; Copying</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>a = np.arange(12)
+b = a.reshape(3, 4)      # view (usually)
+c = a.reshape(-1, 2)     # -1 infers dimension
+d = a.ravel()            # flatten (view if possible)
+e = a.flatten()          # always returns a copy
+f = a.T                  # transpose
+g = np.transpose(a.reshape(3,4), (1,0))</code></pre>
+        </div>
+        <p><strong>Important:</strong> <code>reshape</code>, <code>ravel</code> and slicing often return <em>views</em>.
+          Modifying a view modifies the original. Use <code>.copy()</code> when you need independence.</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>original = np.array([1, 2, 3])
+view = original[:]
+view[0] = 99
+print(original)          # [99 2 3]
+
+independent = original.copy()</code></pre>
+        </div>
+        <h3>Stacking &amp; splitting</h3>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>np.vstack([a, b])        # vertical stack
+np.hstack([a, b])        # horizontal
+np.concatenate([a, b], axis=0)
+np.split(arr, 3)         # equal parts
+np.hsplit(arr, 2)
+np.vsplit(arr, 2)</code></pre>
+        </div>
+      </section>
+
+      <!-- Operations -->
+      <section id="operations" class="fade-in">
+        <h2>8. Arithmetic &amp; Universal Functions (ufuncs)</h2>
+        <p>NumPy operations are element-wise and vectorized. Avoid Python <code>for</code> loops for performance.</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>a = np.array([1, 2, 3])
+b = np.array([10, 20, 30])
+
+a + b          # [11 22 33]
+a * b          # [10 40 90]
+a ** 2         # [1 4 9]
+np.sqrt(a)
+np.exp(a)
+np.sin(a)
+np.log(a)
+np.abs([-1, 2, -3])</code></pre>
+        </div>
+        <h3>Useful ufuncs</h3>
+        <ul class="concept-list">
+          <li>Math: <code>add, subtract, multiply, divide, power, mod, floor_divide</code></li>
+          <li>Trig: <code>sin, cos, tan, arcsin, arccos, arctan</code></li>
+          <li>Comparison: <code>greater, less, equal, maximum, minimum</code></li>
+          <li>Logical: <code>logical_and, logical_or, logical_not, logical_xor</code></li>
+          <li>Floating: <code>isnan, isinf, isfinite, floor, ceil, rint</code></li>
+        </ul>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># out parameter for in-place computation
+result = np.empty(3)
+np.add(a, b, out=result)</code></pre>
+        </div>
+      </section>
+
+      <!-- Broadcasting -->
+      <section id="broadcasting" class="fade-in">
+        <h2>9. Broadcasting</h2>
+        <p>Broadcasting allows arithmetic between arrays of different shapes without explicit replication.</p>
+        <div class="card">
+          <h4>Broadcasting Rules</h4>
+          <ol style="color:var(--text-accent);padding-left:1.25rem;">
+            <li>If arrays differ in number of dimensions, the smaller one is padded with ones on the left.</li>
+            <li>Arrays are compatible in a dimension if they are equal or one of them is 1.</li>
+            <li>The resulting shape is the maximum size along each dimension.</li>
+          </ol>
+        </div>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>a = np.array([[1, 2, 3],
+              [4, 5, 6]])          # shape (2, 3)
+b = np.array([10, 20, 30])         # shape (3,) → broadcast to (2, 3)
+
+print(a + b)
+# [[11 22 33]
+#  [14 25 36]]
+
+# Column vector
+c = np.array([[10], [20]])         # shape (2, 1)
+print(a + c)
+# [[11 12 13]
+#  [24 25 26]]</code></pre>
+        </div>
+      </section>
+
+      <!-- Aggregation -->
+      <section id="aggregation" class="fade-in">
+        <h2>10. Aggregation Functions</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>a = np.arange(1, 13).reshape(3, 4)
+
+a.sum()                 # total sum
+a.sum(axis=0)           # column-wise
+a.sum(axis=1)           # row-wise
+a.mean(), a.std(), a.var()
+a.min(), a.max()
+a.argmin(), a.argmax()  # indices
+a.cumsum(axis=1)
+a.prod()
+np.percentile(a, 50)
+np.median(a)
+np.any(a > 10), np.all(a > 0)</code></pre>
+        </div>
+      </section>
+
+      <!-- Boolean -->
+      <section id="boolean" class="fade-in">
+        <h2>11. Boolean Logic &amp; Masking</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>a = np.array([1, 5, 3, 8, 2, 9])
+
+(a > 3) &amp; (a &lt; 8)       # element-wise AND
+(a &lt; 3) | (a &gt; 7)       # OR
+~(a &gt; 5)                # NOT
+
+np.where(a &gt; 5, a, 0)   # conditional selection
+np.select([a&lt;3, a&gt;7], [a*10, a*100], default=a)</code></pre>
+        </div>
+      </section>
+
+      <!-- Linear Algebra -->
+      <section id="linalg" class="fade-in">
+        <h2>12. Linear Algebra (numpy.linalg)</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>A = np.array([[1, 2], [3, 4]])
+b = np.array([5, 6])
+
+np.dot(A, b)            # or A @ b
+np.matmul(A, A)
+np.linalg.inv(A)        # inverse
+np.linalg.det(A)        # determinant
+np.linalg.eig(A)        # eigenvalues &amp; eigenvectors
+np.linalg.svd(A)        # singular value decomposition
+np.linalg.solve(A, b)   # solve Ax = b
+np.linalg.norm(A)       # norms
+np.trace(A)
+np.outer([1,2], [3,4])  # outer product</code></pre>
+        </div>
+      </section>
+
+      <!-- Random -->
+      <section id="random" class="fade-in">
+        <h2>13. Random Number Generation</h2>
+        <p>Modern NumPy uses the <code>Generator</code> API (preferred over the legacy <code>np.random.*</code>).</p>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>rng = np.random.default_rng(seed=42)
+
+rng.random((2, 3))              # uniform [0, 1)
+rng.integers(0, 10, size=5)     # integers
+rng.normal(0, 1, size=1000)     # standard normal
+rng.uniform(-1, 1, 5)
+rng.choice([1,2,3,4], size=3, replace=False)
+rng.shuffle(arr)                # in-place
+rng.permutation(10)
+
+# Distributions
+rng.binomial(n=10, p=0.5, size=5)
+rng.poisson(lam=3, size=5)
+rng.exponential(scale=1.0, size=5)</code></pre>
+        </div>
+      </section>
+
+      <!-- I/O -->
+      <section id="io" class="fade-in">
+        <h2>14. File Input / Output</h2>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code># Binary (efficient)
+np.save('data.npy', arr)
+arr = np.load('data.npy')
+
+np.savez('archive.npz', a=arr1, b=arr2)
+data = np.load('archive.npz')
+print(data['a'])
+
+# Text
+np.savetxt('data.csv', arr, delimiter=',')
+arr = np.loadtxt('data.csv', delimiter=',')
+arr = np.genfromtxt('data.csv', delimiter=',', missing_values='NA')</code></pre>
+        </div>
+      </section>
+
+      <!-- Advanced -->
+      <section id="advanced" class="fade-in">
+        <h2>15. Advanced Topics</h2>
+        <h3>Structured arrays</h3>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>dtype = [('name', 'U10'), ('age', 'i4'), ('weight', 'f4')]
+data = np.array([('Alice', 25, 55.0), ('Bob', 30, 70.5)], dtype=dtype)
+print(data['name'])
+print(data[data['age'] &gt; 26])</code></pre>
+        </div>
+
+        <h3>Masked arrays</h3>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>import numpy.ma as ma
+x = ma.array([1, 2, 3, 4], mask=[0, 0, 1, 0])
+print(x.mean())   # ignores masked values</code></pre>
+        </div>
+
+        <h3>Memory mapping</h3>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">python</span><button class="copy-btn">Copy</button></div>
+          <pre><code>mmap = np.memmap('large.dat', dtype='float32', mode='w+', shape=(10000, 10000))
+mmap[:100] = np.random.rand(100, 10000)
+mmap.flush()</code></pre>
+        </div>
+
+        <h3>Performance tips</h3>
+        <ul class="concept-list">
+          <li>Prefer vectorized operations over loops</li>
+          <li>Use appropriate dtypes to reduce memory</li>
+          <li>Avoid unnecessary copies (<code>view</code> vs <code>copy</code>)</li>
+          <li>Use <code>out=</code> parameter in ufuncs</li>
+          <li>Consider Numba or Cython for complex custom loops</li>
+        </ul>
+      </section>
+
+      <div class="card fade-in" style="margin-top:3rem;text-align:center;">
+        <h3>Next Step</h3>
+        <p>Now that you understand NumPy arrays, continue to Pandas for labeled data structures and powerful data
+          analysis tools.</p>
+        <a href="pandas.html" class="btn btn-primary" style="margin-top:1rem;">Go to Pandas →</a>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>Data<span class="text-gradient">Viz</span> Academy</h3>
+        <p>Complete guides for the Python data science stack.</p>
+      </div>
+      <div>
+        <h4>Libraries</h4>
+        <ul>
+          <li><a href="numpy.html">NumPy</a></li>
+          <li><a href="pandas.html">Pandas</a></li>
+          <li><a href="matplotlib.html">Matplotlib</a></li>
+          <li><a href="seaborn.html">Seaborn</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Official Docs</h4>
+        <ul>
+          <li><a href="https://numpy.org/doc/" target="_blank" rel="noopener">NumPy Documentation</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 AMD</p>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+
+</html>
